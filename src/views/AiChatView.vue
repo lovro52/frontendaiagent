@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -186,9 +187,12 @@ export default {
 
 .answer-box {
   margin-top: 20px;
-  background-color: #e0f7fa;
+  background-color: #ffffff; /* Light background for readability */
+  color: #333333; /* Dark text for contrast */
   padding: 20px;
   border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow to make it stand out */
+  text-align: left; /* Align text to the left for better readability */
 }
 
 .upload-section {
