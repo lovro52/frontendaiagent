@@ -17,7 +17,13 @@
       </a>
     </div>
 
-    <div class="card-container">
+    <!-- Show logout button if user is authenticated -->
+    <div v-if="isAuthenticated">
+      <button @click="logout">Logout</button>
+    </div>
+
+    <!-- Show login/register cards if user is not authenticated -->
+    <div v-else class="card-container">
       <div
         class="card"
         :class="{ flipped: flippedCard === 'login' }"
@@ -117,6 +123,12 @@ export default {
       registerPasswordConfirm: "",
     };
   },
+  computed: {
+    // Check if the user is authenticated
+    isAuthenticated() {
+      return !!localStorage.getItem("accessToken");
+    },
+  },
   methods: {
     toggleFlip(card) {
       this.flippedCard = this.flippedCard === card ? null : card;
@@ -179,7 +191,7 @@ export default {
           console.log("User logged in successfully:", result);
           localStorage.setItem("accessToken", result.access_token);
           alert("Logged in successfully!");
-          this.$router.push("/chat");
+          this.$router.push("/ai-chat");
         } else {
           console.error("Error logging in:", result.error);
           alert("Error logging in: " + result.error);
@@ -189,12 +201,18 @@ export default {
         alert("An error occurred during login. Please try again.");
       }
     },
+
+    logout() {
+      localStorage.removeItem("accessToken");
+      alert("You have been logged out.");
+      this.$router.push("/");
+    },
   },
 };
 </script>
 
 <style scoped>
-/* CSS remains unchanged */
+/* Your existing styles remain unchanged */
 html,
 body {
   margin: 0;
@@ -300,18 +318,6 @@ body {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   animation: floating 8s infinite ease-in-out;
-}
-
-@keyframes floating {
-  0% {
-    transform: translate(0, 0);
-  }
-  50% {
-    transform: translate(20px, 20px);
-  }
-  100% {
-    transform: translate(0, 0);
-  }
 }
 
 .card-container {

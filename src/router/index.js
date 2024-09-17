@@ -12,9 +12,10 @@ const routes = [
     component: HomeView,
   },
   {
-    path: "/about",
-    name: "about",
+    path: "/ai-chat",
+    name: "ai-chat",
     component: AiChatView,
+    meta: { requiresAuth: true }, // Requires authentication to access
   },
 ];
 
@@ -22,6 +23,21 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+});
+
+// Navigation guard
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!localStorage.getItem("accessToken");
+
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (!isAuthenticated) {
+      next("/"); // Redirect to home if not authenticated
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

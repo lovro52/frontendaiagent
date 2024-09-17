@@ -2,11 +2,36 @@
   <div id="app">
     <nav>
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">AI-Chat</router-link>
+      <router-link to="/ai-chat">AI-Chat</router-link>
+      <button v-if="isAuthenticated" @click="logout">Logout</button>
     </nav>
     <router-view />
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      isAuthenticated: !!localStorage.getItem("accessToken"), // Check initial authentication state
+    };
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem("accessToken");
+      this.isAuthenticated = false;
+      this.$router.push("/");
+      alert("Logged out successfully!");
+    },
+  },
+  watch: {
+    // Watch for route changes to update authentication state
+    $route() {
+      this.isAuthenticated = !!localStorage.getItem("accessToken");
+    },
+  },
+};
+</script>
 
 <style lang="scss">
 #app {
@@ -51,6 +76,19 @@ nav a:hover {
 }
 
 nav a.router-link-exact-active {
+  color: #ffcb77;
+}
+
+nav button {
+  background: none;
+  border: none;
+  color: #ffffff;
+  margin-left: 15px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+nav button:hover {
   color: #ffcb77;
 }
 </style>
